@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <div th:replace="layout/layout :: bootstrapCore"></div>
+</head>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#picForm').submit(function (event) {
+            let form = $('#picForm')[0];
+            let data = new FormData(form);
+            $.ajax({
+                type:"POST",
+                enctype:'multipart/form-data',
+                url:"/newPic",
+                data:data,
+                processData: false,
+                contentType: false,
+                cache: false,
+                timeout:1000000,
+                success: function (pic) {
+                    let response ='<img style="width: 160px; height: 100px" src="';
+                    response+="image/"+pic.image;
+                    response+='">';
+                    $("#createdResponse").html(response);
+                }
+            });
+            event.preventDefault();
+        });
+    })
+</script>
+<body>
+<form th:object="${picForm}" enctype="multipart/form-data" id="picForm" >
+    <div  id="createdResponse" style="color: crimson;font-weight: bolder; margin-left: 40%"></div>
+    <p>Name:<input th:field="*{name}"></p>
+    <p>Image:<input type="file" th:field="*{image}"></p>
+    <p><button type="submit">Submit</button></p>
+</form>
+</body>
+</html>
